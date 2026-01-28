@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ProductsDropdown from './ProductsDropdown';
+import MegaMenu from './MegaMenu';
 import ProfileDropdown from './ProfileDropdown';
 import { useCart } from '@/store/cartStore';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
   const productsRef = useRef<HTMLDivElement>(null);
   const { getTotalItems } = useCart();
@@ -43,7 +45,10 @@ export default function Header() {
   };
 
   return (
-    <div className="flex flex-col w-full font-sans sticky top-0 z-50 bg-white">
+    <div
+      className="flex flex-col w-full font-sans sticky top-0 z-50 bg-white"
+      onMouseLeave={() => setActiveCategory(null)}
+    >
       {/* Top Banner - Myntra style minimalist or soft gradient */}
       <div className="bg-gradient-to-r from-pink-500 to-orange-400 text-white text-xs sm:text-sm font-bold py-2 text-center px-4 tracking-wide relative z-[51]">
         FLAT ₹500 OFF ON YOUR FIRST ORDER! USE CODE: NEW500
@@ -65,11 +70,20 @@ export default function Header() {
             </div>
 
             {/* Desktop Navigation - Fashion Categories */}
-            <nav className="hidden md:flex items-center space-x-8 text-sm font-bold text-gray-700 uppercase tracking-wide">
-              <Link href="/products?category=Men" className="hover:text-black hover:underline underline-offset-4 decoration-2 decoration-pink-500 transition-all">MEN</Link>
-              <Link href="/products?category=Women" className="hover:text-black hover:underline underline-offset-4 decoration-2 decoration-pink-500 transition-all">WOMEN</Link>
-              <Link href="/products?category=Kids" className="hover:text-black hover:underline underline-offset-4 decoration-2 decoration-pink-500 transition-all">KIDS</Link>
-              <Link href="/products?category=Accessories" className="hover:text-black hover:underline underline-offset-4 decoration-2 decoration-pink-500 transition-all">ACCESSORIES</Link>
+            <nav className="hidden md:flex items-center space-x-8 text-sm font-bold text-gray-700 uppercase tracking-wide h-full">
+              {['Men', 'Women', 'Kids', 'Accessories'].map((category) => (
+                <Link
+                  key={category}
+                  href={`/products?category=${category}`}
+                  className={`flex items-center h-full border-b-4 transition-all duration-200 px-2 ${activeCategory === category
+                      ? 'border-pink-500 text-black'
+                      : 'border-transparent hover:border-pink-500 hover:text-black'
+                    }`}
+                  onMouseEnter={() => setActiveCategory(category)}
+                >
+                  {category.toUpperCase()}
+                </Link>
+              ))}
 
               <div ref={productsRef} className="relative group">
                 <button
@@ -202,6 +216,16 @@ export default function Header() {
           )}
         </div>
       </header>
+
+      {/* Mega Menu */}
+      {activeCategory && (
+        <MegaMenu
+          category={activeCategory}
+          isOpen={!!activeCategory}
+          onMouseEnter={() => setActiveCategory(activeCategory)}
+          onMouseLeave={() => setActiveCategory(null)}
+        />
+      )}
 
       {/* Products Dropdown Overlay */}
       {isProductsOpen && (

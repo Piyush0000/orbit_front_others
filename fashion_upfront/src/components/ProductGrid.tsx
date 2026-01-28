@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/store/cartStore';
 import { useWishlist } from '@/store/wishlistStore';
 import { Product } from '@/types/product';
@@ -19,6 +20,8 @@ interface FilterState {
 }
 
 export default function ProductGrid() {
+  const searchParams = useSearchParams(); // Hook to read URL params
+
   const [activeFilters, setActiveFilters] = useState<FilterState>({
     category: [],
     brand: [],
@@ -26,6 +29,17 @@ export default function ProductGrid() {
     availability: [],
     size: [],
   });
+
+  // Initialize from URL params
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      setActiveFilters(prev => ({
+        ...prev,
+        category: [categoryParam]
+      }));
+    }
+  }, [searchParams]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('popular');
   const [showFilters, setShowFilters] = useState(false);
@@ -73,6 +87,19 @@ export default function ProductGrid() {
   // Derive filtered and sorted products
   const displayedProducts = useMemo(() => {
     let filtered = [...allProducts];
+
+    // 0. Subcategory Filtering (from URL)
+    const subcategoryParam = searchParams.get('subcategory');
+    if (subcategoryParam) {
+      const term = subcategoryParam.toLowerCase();
+      filtered = filtered.filter(product =>
+        product.category.toLowerCase() === searchParams.get('category')?.toLowerCase() && (
+          product.name.toLowerCase().includes(term) ||
+          product.description.toLowerCase().includes(term) ||
+          (product.tags && product.tags.some(tag => tag.toLowerCase().includes(term))) ||
+          product.category.toLowerCase().includes(term) // Fallback
+        ));
+    }
 
     // 1. Search Filtering
     if (searchQuery.trim()) {
@@ -372,7 +399,7 @@ export default function ProductGrid() {
                   style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
                 >
                   <Link href={`/products/${product.id}`}>
-                    <div className="aspect-square bg-gray-200 overflow-hidden cursor-pointer relative group">
+                    <div className="aspect-square bg-gray-200 overflow-hidden cursor-clothing relative group">
                       <Image
                         src={product.image}
                         alt={product.name}
