@@ -21,7 +21,9 @@ export default function Home() {
         <Hero />
         <FeaturesSection />
         <FeaturedProducts />
-        <ProductGrid />
+        <React.Suspense fallback={<div>Loading products...</div>}>
+          <ProductGrid />
+        </React.Suspense>
         <BannerCTA />
         <Newsletter />
       </main>
