@@ -496,37 +496,39 @@ export default function ProductGrid() {
         </div>
       </div>
 
-      {/* Size Selection Modal */}
+      {/* Size Selection Modal - Compact & Stylish */}
       {showSizeModal && selectedProductForSize && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full animate-fadeIn" style={{ backgroundColor: 'var(--card-bg)' }}>
-            <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text)' }}>Select Size</h3>
-            <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
-              Please select a size for <strong>{selectedProductForSize.name}</strong>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity">
+          <div
+            className="bg-white rounded-xl shadow-2xl p-5 w-auto max-w-[300px] animate-fadeIn transform transition-all scale-100"
+            style={{ backgroundColor: 'var(--card-bg)' }}
+          >
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Select Size</h3>
+              <button
+                onClick={() => { setShowSizeModal(false); setSelectedProductForSize(null); }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+
+            <p className="mb-4 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
+              {selectedProductForSize.name}
             </p>
 
-            <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="grid grid-cols-3 gap-2 mb-4">
               {selectedProductForSize.sizes?.map((size) => (
                 <button
                   key={size}
                   onClick={() => handleAddToCart(selectedProductForSize, size)}
-                  className="py-2 border rounded-md hover:border-black hover:bg-gray-50 transition-colors"
+                  className="py-2 px-3 text-sm font-semibold border rounded-lg hover:border-black hover:bg-black hover:text-white transition-all duration-200"
                   style={{ borderColor: 'var(--card-border)', color: 'var(--text)' }}
                 >
                   {size}
                 </button>
               ))}
             </div>
-
-            <button
-              onClick={() => {
-                setShowSizeModal(false);
-                setSelectedProductForSize(null);
-              }}
-              className="w-full py-2 text-gray-500 hover:text-gray-700"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
