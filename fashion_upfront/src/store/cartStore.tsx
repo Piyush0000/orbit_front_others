@@ -7,8 +7,8 @@ import { parseINRToNumber } from '@/lib/utils';
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: number, size?: string) => void;
+  updateQuantity: (id: number, quantity: number, size?: string) => void;
   getTotalItems: () => number;
   getSubtotal: () => number;
   clearCart: () => void;
@@ -54,13 +54,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = (item: Omit<CartItem, 'quantity'>, quantity: number = 1) => {
     setCartItems((prev) => {
-      const existingItem = prev.find((cartItem) => cartItem.id === item.id);
+      const existingItem = prev.find((cartItem) =>
+        cartItem.id === item.id && cartItem.size === item.size
+      );
 
       if (existingItem) {
         // If item exists, update quantity (max 5)
         const newQuantity = Math.min(existingItem.quantity + quantity, 5);
         return prev.map((cartItem) =>
-          cartItem.id === item.id
+          (cartItem.id === item.id && cartItem.size === item.size)
             ? { ...cartItem, quantity: newQuantity }
             : cartItem
         );
@@ -71,13 +73,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = (id: number, size?: string) => {
+    setCartItems((prev) => prev.filter((item) => {
+      if (size) {
+        return !(item.id === id && item.size === size);
+      }
+      return item.id !== id;
+    }));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: number, quantity: number, size?: string) => {
     if (quantity < 1) {
-      removeFromCart(id);
+      removeFromCart(id, size);
       return;
     }
     if (quantity > 5) {
@@ -85,9 +92,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+      prev.map((item) => {
+        if (size) {
+          return (item.id === id && item.size === size) ? { ...item, quantity } : item;
+        }
+        return item.id === id ? { ...item, quantity } : item;
+      })
     );
   };
 

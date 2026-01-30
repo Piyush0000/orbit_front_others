@@ -43,6 +43,8 @@ export default function ProductGrid() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('popular');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedProductForSize, setSelectedProductForSize] = useState<Product | null>(null);
+  const [showSizeModal, setShowSizeModal] = useState(false);
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
@@ -72,7 +74,14 @@ export default function ProductGrid() {
     });
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product, size?: string) => {
+    // If product has sizes and no size is selected, open modal
+    if (product.sizes && product.sizes.length > 0 && !size) {
+      setSelectedProductForSize(product);
+      setShowSizeModal(true);
+      return;
+    }
+
     const priceInINRNum = parseINRToNumber(product.price);
     addToCart({
       id: product.id,
@@ -81,7 +90,12 @@ export default function ProductGrid() {
       priceNum: priceInINRNum,
       image: product.image,
       shortDescription: product.description,
+      size: size
     }, 1);
+
+    // Close modal if open
+    setShowSizeModal(false);
+    setSelectedProductForSize(null);
   };
 
   // Derive filtered and sorted products
@@ -481,6 +495,41 @@ export default function ProductGrid() {
           )}
         </div>
       </div>
+
+      {/* Size Selection Modal */}
+      {showSizeModal && selectedProductForSize && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full animate-fadeIn" style={{ backgroundColor: 'var(--card-bg)' }}>
+            <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text)' }}>Select Size</h3>
+            <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
+              Please select a size for <strong>{selectedProductForSize.name}</strong>
+            </p>
+
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {selectedProductForSize.sizes?.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => handleAddToCart(selectedProductForSize, size)}
+                  className="py-2 border rounded-md hover:border-black hover:bg-gray-50 transition-colors"
+                  style={{ borderColor: 'var(--card-border)', color: 'var(--text)' }}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                setShowSizeModal(false);
+                setSelectedProductForSize(null);
+              }}
+              className="w-full py-2 text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

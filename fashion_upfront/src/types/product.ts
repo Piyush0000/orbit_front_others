@@ -66,5 +66,6 @@ export interface CartItem {
     priceNum: number; // Numeric price for calculations
     image: string;
     quantity: number;
+    size?: string;
     shortDescription?: string;
 }
