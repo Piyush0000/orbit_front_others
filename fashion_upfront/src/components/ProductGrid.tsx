@@ -496,41 +496,76 @@ export default function ProductGrid() {
         </div>
       </div>
 
-      {/* Size Selection Modal - Compact & Stylish */}
-      {showSizeModal && selectedProductForSize && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity">
-          <div
-            className="bg-white rounded-xl shadow-2xl p-5 w-auto max-w-[300px] animate-fadeIn transform transition-all scale-100"
-            style={{ backgroundColor: 'var(--card-bg)' }}
-          >
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Select Size</h3>
+      {/* Size Selection Side Drawer */}
+      <div
+        className={`fixed inset-y-0 right-0 z-50 w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out ${showSizeModal && selectedProductForSize ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{ backgroundColor: 'var(--card-bg)', borderLeft: '1px solid var(--card-border)' }}
+      >
+        {selectedProductForSize && (
+          <div className="h-full flex flex-col p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-red-600 font-bold text-lg flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                Please Select a Size
+              </h3>
               <button
                 onClick={() => { setShowSizeModal(false); setSelectedProductForSize(null); }}
                 className="text-gray-400 hover:text-gray-600"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
 
-            <p className="mb-4 text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
-              {selectedProductForSize.name}
-            </p>
-
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              {selectedProductForSize.sizes?.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => handleAddToCart(selectedProductForSize, size)}
-                  className="py-2 px-3 text-sm font-semibold border rounded-lg hover:border-black hover:bg-black hover:text-white transition-all duration-200"
-                  style={{ borderColor: 'var(--card-border)', color: 'var(--text)' }}
-                >
-                  {size}
-                </button>
-              ))}
+            <div className="flex items-center gap-4 mb-6 p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div className="relative w-16 h-16 rounded-md overflow-hidden flex-shrink-0 border">
+                <Image
+                  src={selectedProductForSize.image}
+                  alt={selectedProductForSize.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm line-clamp-2" style={{ color: 'var(--text)' }}>{selectedProductForSize.name}</h4>
+                <p className="text-sm font-bold mt-1" style={{ color: 'var(--text-muted)' }}>{selectedProductForSize.price}</p>
+              </div>
             </div>
+
+            <div className="flex-grow">
+              <p className="text-sm font-medium mb-3" style={{ color: 'var(--text-muted)' }}>Available Sizes:</p>
+              <div className="grid grid-cols-3 gap-3">
+                {selectedProductForSize.sizes?.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => handleAddToCart(selectedProductForSize, size)}
+                    className="py-3 px-2 text-sm font-bold border rounded-lg hover:border-black hover:bg-black hover:text-white transition-all duration-200 active:scale-95 text-center"
+                    style={{ borderColor: 'var(--card-border)', color: 'var(--text)' }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setShowSizeModal(false);
+                setSelectedProductForSize(null);
+              }}
+              className="w-full py-3 mt-auto text-gray-500 hover:bg-gray-100 rounded-lg transition-colors font-medium"
+            >
+              Cancel
+            </button>
           </div>
-        </div>
+        )}
+      </div>
+
+      {/* Backdrop for Drawer (Optional - click to close) */}
+      {showSizeModal && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-20 backdrop-blur-[1px] transition-opacity"
+          onClick={() => { setShowSizeModal(false); setSelectedProductForSize(null); }}
+        ></div>
       )}
     </section>
   );
