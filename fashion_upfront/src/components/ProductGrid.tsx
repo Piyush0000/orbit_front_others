@@ -560,10 +560,10 @@ export default function ProductGrid() {
         )}
       </div>
 
-      {/* Backdrop for Drawer (Optional - click to close) */}
+      {/* Backdrop for Drawer (Invisible - click to close) */}
       {showSizeModal && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-20 backdrop-blur-[1px] transition-opacity"
+          className="fixed inset-0 z-40 transition-opacity"
           onClick={() => { setShowSizeModal(false); setSelectedProductForSize(null); }}
         ></div>
       )}
