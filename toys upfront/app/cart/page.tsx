@@ -17,7 +17,7 @@ export default function CartPage() {
                                 <div key={item} className="flex gap-4 py-4 border-b border-gray-100 last:border-0">
                                     <div className="w-24 h-24 bg-gray-100 rounded-xl flex-shrink-0 overflow-hidden">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src="/api/placeholder/200/200" alt="Product" className="w-full h-full object-cover" />
+                                        <img src={`/images/toy-${item}.png`} alt="Product" className="w-full h-full object-cover" />
                                     </div>
                                     <div className="flex-1 flex flex-col justify-between">
                                         <div className="flex justify-between items-start">
@@ -36,7 +36,7 @@ export default function CartPage() {
                                                 <span className="w-8 text-center text-sm font-bold text-gray-900">1</span>
                                                 <button className="px-3 py-1 hover:bg-gray-50 transition-colors text-gray-600">+</button>
                                             </div>
-                                            <span className="font-bold text-gray-900 text-lg">$34.99</span>
+                                            <span className="font-bold text-gray-900 text-lg">₹2,499</span>
                                         </div>
                                     </div>
                                 </div>

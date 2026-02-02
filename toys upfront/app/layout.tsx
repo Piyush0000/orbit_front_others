@@ -3,6 +3,7 @@ import { Nunito, Fredoka } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -28,10 +29,13 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${nunito.variable} ${fredoka.variable} antialiased min-h-screen flex flex-col`}
+        suppressHydrationWarning
       >
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        <WishlistProvider>
+          <Header />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+        </WishlistProvider>
       </body>
     </html>
   );

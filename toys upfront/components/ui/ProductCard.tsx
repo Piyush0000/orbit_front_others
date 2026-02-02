@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Star, ShoppingCart, Heart } from "lucide-react";
+import { useWishlist } from "@/context/WishlistContext";
 
 interface Product {
     id: number | string;
@@ -16,6 +17,19 @@ interface Product {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const isWishlisted = isInWishlist(product.id);
+
+    const handleWishlistClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (isWishlisted) {
+            removeFromWishlist(product.id);
+        } else {
+            addToWishlist(product);
+        }
+    };
+
     return (
         <div className="group bg-white rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-xl transition-all duration-300 relative flex flex-col h-full cursor-pointer">
             {/* Image Area */}
@@ -25,7 +39,7 @@ export default function ProductCard({ product }: { product: Product }) {
                         {product.badge}
                     </span>
                 )}
-                <div className="absolute inset-0 flex items-center justify-center text-gray-300">
+                <Link href={`/product/${product.id}`} className="absolute inset-0 flex items-center justify-center text-gray-300">
                     {/* Placeholder/Image */}
                     {product.image ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -33,12 +47,15 @@ export default function ProductCard({ product }: { product: Product }) {
                     ) : (
                         <span className="text-gray-400">[Image]</span>
                     )}
-                </div>
+                </Link>
 
                 {/* Hover Actions */}
-                <div className="absolute right-3 top-3 flex flex-col gap-2 translate-x-12 group-hover:translate-x-0 transition-transform duration-300">
-                    <button className="p-2 bg-white rounded-full shadow-md hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors">
-                        <Heart className="w-5 h-5" />
+                <div className="absolute right-3 top-3 flex flex-col gap-2 translate-x-12 group-hover:translate-x-0 transition-transform duration-300 pointer-events-auto">
+                    <button
+                        onClick={handleWishlistClick}
+                        className={`p-2 rounded-full shadow-md transition-colors ${isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white text-gray-400 hover:bg-red-50 hover:text-red-500'}`}
+                    >
+                        <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
                     </button>
                 </div>
             </div>

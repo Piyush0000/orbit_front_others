@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
     return (
-        <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-yellow-50 pt-16 pb-20 lg:pt-24 lg:pb-28">
+        <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-16 pb-20 lg:pt-24 lg:pb-28">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                     {/* Text Content */}
@@ -27,10 +27,10 @@ export default function Hero() {
                                 <ArrowRight className="ml-2 w-5 h-5" />
                             </Link>
                             <Link
-                                href="/category/gifts"
+                                href="/category/new-arrivals"
                                 className="inline-flex items-center justify-center px-8 py-3.5 text-base font-bold text-gray-700 bg-white border-2 border-gray-100 rounded-full hover:border-primary/20 hover:bg-gray-50 transition-all shadow-sm"
                             >
-                                Find a Gift 🎁
+                                New Arrivals ✨
                             </Link>
                         </div>
                     </div>

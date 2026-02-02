@@ -4,9 +4,11 @@ import Link from "next/link";
 import { Search, ShoppingCart, Heart, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import AnnouncementBar from "./AnnouncementBar";
+import { useWishlist } from "@/context/WishlistContext";
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { wishlist } = useWishlist();
 
     return (
         <div className="sticky top-0 z-50 bg-white shadow-sm">
@@ -45,47 +47,75 @@ export default function Header() {
                         <Link href="/category/educational" className="hover:text-primary transition-colors">Educational</Link>
                         <Link href="/category/outdoor" className="hover:text-primary transition-colors">Outdoor</Link>
                         <Link href="/category/new-arrivals" className="hover:text-primary transition-colors">New Arrivals</Link>
-                        <Link href="/category/gifts" className="text-secondary hover:text-teal-600 font-bold flex items-center gap-1">
-                            <span className="text-lg">🎁</span> Gift Guide
-                        </Link>
                     </nav>
 
                     {/* Search Bar */}
-                    <div className="hidden md:flex flex-1 max-w-lg mx-4 relative">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            const formData = new FormData(e.currentTarget);
+                            const query = formData.get('search');
+                            if (query) {
+                                window.location.href = `/category/all?search=${query}`;
+                            }
+                        }}
+                        className="hidden md:flex flex-1 max-w-lg mx-4 relative"
+                    >
                         <input
                             type="text"
+                            name="search"
                             placeholder="Search for toys, brands, or age..."
                             className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-full transition-all outline-none text-sm"
                         />
-                        <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    </div>
+                        <button type="submit" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors">
+                            <Search className="w-4 h-4" />
+                        </button>
+                    </form>
 
                     {/* User Actions */}
                     <div className="flex items-center gap-2 sm:gap-4">
-                        <button className="p-2 hover:bg-gray-50 rounded-full transition-colors relative group">
+                        <Link href="/wishlist" className="p-2 hover:bg-gray-50 rounded-full transition-colors relative group">
                             <Heart className="w-6 h-6 text-gray-600 group-hover:text-red-500 transition-colors" />
-                        </button>
+                            {wishlist.length > 0 && (
+                                <span className="absolute top-1 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
+                                    {wishlist.length}
+                                </span>
+                            )}
+                        </Link>
                         <Link href="/cart" className="p-2 hover:bg-gray-50 rounded-full transition-colors relative group">
                             <ShoppingCart className="w-6 h-6 text-gray-600 group-hover:text-primary transition-colors" />
                             <span className="absolute top-1 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                                 2
                             </span>
                         </Link>
-                        <button className="p-2 hover:bg-gray-50 rounded-full transition-colors hidden sm:block">
+                        <Link href="/profile" className="p-2 hover:bg-gray-50 rounded-full transition-colors hidden sm:block">
                             <User className="w-6 h-6 text-gray-600 hover:text-primary transition-colors" />
-                        </button>
+                        </Link>
                     </div>
                 </div>
 
                 {/* Mobile Search - Visible only on mobile */}
-                <div className="md:hidden mt-4 relative">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.currentTarget);
+                        const query = formData.get('search');
+                        if (query) {
+                            window.location.href = `/category/all?search=${query}`;
+                        }
+                    }}
+                    className="md:hidden mt-4 relative"
+                >
                     <input
                         type="text"
+                        name="search"
                         placeholder="Search for toys..."
                         className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-full text-sm focus:outline-none border border-transparent focus:border-primary/20"
                     />
-                    <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                </div>
+                    <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors">
+                        <Search className="w-4 h-4" />
+                    </button>
+                </form>
             </div>
         </div>
     );
