@@ -9,7 +9,7 @@ import { products } from "@/lib/data";
 
 export default function TrendingToys() {
     return (
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-sky-50/30">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-end mb-12">
                     <div>

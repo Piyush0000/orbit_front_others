@@ -3,12 +3,17 @@
 :root {
   --background: #FDFFFC;
   --foreground: #011627;
-  /* Brand Colors */
-  --primary: #FF6B35;
-  --secondary: #2EC4B6;
-  --accent: #FFD166;
-  --muted: #f3f4f6;
-  --border: #e5e7eb;
+  /* Brand Colors - Pastel Blue Theme */
+  --primary: #5FA8D3;
+  /* Pastel Blue */
+  --secondary: #90E0EF;
+  /* Soft Sky */
+  --accent: #FFB703;
+  /* Warm Yellow contrast */
+  --muted: #F0F9FF;
+  /* Alice Blue */
+  --border: #BFDBFE;
+  /* Light Blue Border */
 }
 
 @theme inline {
@@ -19,7 +24,7 @@
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-border: var(--border);
-  
+
   --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fredoka), ui-sans-serif, system-ui, sans-serif;
 }
