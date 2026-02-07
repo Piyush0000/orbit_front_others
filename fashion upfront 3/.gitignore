@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+check_repo/
+full_debug_repo/
+fix_repo/
+orbit_temp_push/
