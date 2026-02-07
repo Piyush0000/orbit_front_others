@@ -1,16 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ShoppingCart, Heart, User, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Search, ShoppingCart, Heart, User, Menu, X, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
 import AnnouncementBar from "./AnnouncementBar";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { wishlist } = useWishlist();
     const { cartCount } = useCart();
+    const pathname = usePathname();
+
+    // Close menu when route changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
+
+    // Prevent body scroll when menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMobileMenuOpen]);
 
 
     return (
@@ -25,18 +44,19 @@ export default function Header() {
                 <div className="flex items-center justify-between gap-4">
                     {/* Mobile Menu Button */}
                     <button
-                        className="lg:hidden p-2 text-foreground/80 hover:bg-muted rounded-full transition-colors"
+                        className="lg:hidden p-2 text-foreground/80 hover:bg-muted rounded-full transition-colors z-50 relative"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle menu"
                     >
-                        {isMobileMenuOpen ? <X /> : <Menu />}
+                        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
 
                     {/* Logo */}
-                    <Link href="/" className="flex-shrink-0 group flex items-center gap-2">
+                    <Link href="/" className="flex-shrink-0 group flex items-center gap-2 z-50 relative">
                         <div className="bg-primary/10 p-2 rounded-xl rotate-3 group-hover:rotate-6 transition-transform">
                             <span className="text-2xl">🧸</span>
                         </div>
-                        <span className="text-3xl font-extrabold text-foreground font-display tracking-tight leading-none">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-foreground font-display tracking-tight leading-none">
                             Toy<span className="text-primary">Store</span>
                             <span className="text-secondary animate-pulse">.</span>
                         </span>
@@ -82,7 +102,7 @@ export default function Header() {
                     </form>
 
                     {/* User Actions */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 z-50 relative">
                         <Link href="/wishlist" className="p-2.5 hover:bg-muted rounded-full transition-colors relative group text-foreground/70 hover:text-red-400">
                             <Heart className="w-6 h-6 transition-transform group-hover:scale-110" />
                             {wishlist.length > 0 && (
@@ -115,7 +135,7 @@ export default function Header() {
                             window.location.href = `/category/all?search=${query}`;
                         }
                     }}
-                    className="md:hidden mt-4 relative"
+                    className="md:hidden mt-4 relative z-0"
                 >
                     <input
                         type="text"
@@ -127,6 +147,36 @@ export default function Header() {
                         <Search className="w-4 h-4" />
                     </button>
                 </form>
+            </div>
+
+            {/* Mobile Menu Overlay */}
+            <div
+                className={`fixed inset-0 bg-white/98 backdrop-blur-xl z-40 transition-all duration-500 lg:hidden flex flex-col pt-24 px-6 ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+                    }`}
+            >
+                <div className="flex flex-col gap-6 text-xl font-bold text-foreground">
+                    <div className="space-y-4">
+                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Shop By Age</p>
+                        <Link href="/category/age-0-2" className="flex items-center justify-between py-2 border-b border-gray-100">0 - 2 Years <ChevronRight className="w-4 h-4 text-gray-400" /></Link>
+                        <Link href="/category/age-3-5" className="flex items-center justify-between py-2 border-b border-gray-100">3 - 5 Years <ChevronRight className="w-4 h-4 text-gray-400" /></Link>
+                        <Link href="/category/age-6-8" className="flex items-center justify-between py-2 border-b border-gray-100">6 - 8 Years <ChevronRight className="w-4 h-4 text-gray-400" /></Link>
+                        <Link href="/category/age-9-12" className="flex items-center justify-between py-2 border-b border-gray-100">9 - 12 Years <ChevronRight className="w-4 h-4 text-gray-400" /></Link>
+                    </div>
+
+                    <div className="space-y-4 mt-4">
+                        <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Categories</p>
+                        <Link href="/category/educational" className="flex items-center justify-between py-2 border-b border-gray-100">Educational Toys <ChevronRight className="w-4 h-4 text-gray-400" /></Link>
+                        <Link href="/category/outdoor" className="flex items-center justify-between py-2 border-b border-gray-100">Outdoor Fun <ChevronRight className="w-4 h-4 text-gray-400" /></Link>
+                        <Link href="/category/new-arrivals" className="flex items-center justify-between py-2 border-b border-gray-100 text-primary">New Arrivals <ChevronRight className="w-4 h-4 text-primary" /></Link>
+                    </div>
+
+                    <div className="mt-8 pt-8 border-t border-gray-100">
+                        <Link href="/profile" className="flex items-center gap-3 py-2 text-gray-600 hover:text-primary">
+                            <User className="w-5 h-5" />
+                            My Profile
+                        </Link>
+                    </div>
+                </div>
             </div>
         </div>
     );
