@@ -47,7 +47,7 @@ export default function AboutPage() {
                         </div>
                         <div className="bg-white p-8 rounded-lg shadow-sm">
                             <h3 className="text-xl font-bold mb-2">Community</h3>
-                            <p className="text-gray-600">We build relationships, not just customer bases. We're in this together.</p>
+                            <p className="text-gray-600">We build relationships, not just customer bases. We&apos;re in this together.</p>
                         </div>
                     </div>
                 </div>

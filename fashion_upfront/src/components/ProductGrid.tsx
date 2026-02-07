@@ -34,10 +34,14 @@ export default function ProductGrid() {
   useEffect(() => {
     const categoryParam = searchParams.get('category');
     if (categoryParam) {
-      setActiveFilters(prev => ({
-        ...prev,
-        category: [categoryParam]
-      }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      setActiveFilters(prev => {
+        if (prev.category.includes(categoryParam)) return prev;
+        return {
+          ...prev,
+          category: [categoryParam]
+        };
+      });
     }
   }, [searchParams]);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -180,7 +184,7 @@ export default function ProductGrid() {
     });
 
     return filtered;
-  }, [activeFilters, searchQuery, sortBy]);
+  }, [activeFilters, searchQuery, sortBy, searchParams]);
 
   return (
     <section
