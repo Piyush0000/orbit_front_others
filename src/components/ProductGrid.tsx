@@ -34,10 +34,14 @@ export default function ProductGrid() {
   useEffect(() => {
     const categoryParam = searchParams.get('category');
     if (categoryParam) {
-      setActiveFilters(prev => ({
-        ...prev,
-        category: [categoryParam]
-      }));
+      // eslint-disable-next-line
+      setActiveFilters(prev => {
+        if (prev.category.includes(categoryParam)) return prev;
+        return {
+          ...prev,
+          category: [categoryParam]
+        };
+      });
     }
   }, [searchParams]);
 
@@ -177,7 +181,7 @@ export default function ProductGrid() {
               Latest Drops
             </h2>
             <p className="text-[var(--text-secondary)] max-w-md font-light">
-              Explore the season's most coveted pieces, curated for the modern wardrobe.
+              Explore the season&apos;s most coveted pieces, curated for the modern wardrobe.
             </p>
           </div>
 
@@ -232,6 +236,7 @@ export default function ProductGrid() {
                 { title: 'Price', items: prices, key: 'price' as keyof FilterState },
                 { title: 'Brand', items: brands, key: 'brand' as keyof FilterState },
                 { title: 'Size', items: sizes, key: 'size' as keyof FilterState },
+                { title: 'Availability', items: availability, key: 'availability' as keyof FilterState },
               ].map((section) => (
                 <div key={section.title}>
                   <h4 className="font-bold text-xs uppercase tracking-widest text-[var(--text-muted)] mb-4">{section.title}</h4>

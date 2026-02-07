@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface FeaturedProduct {
   id: number;
@@ -28,9 +29,9 @@ export default function FeaturedProducts() {
               Featured Edits
             </h2>
           </div>
-          <a href="/products" className="hidden md:block text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest text-sm font-medium transition-colors">
+          <Link href="/products" className="hidden md:block text-[var(--text-secondary)] hover:text-[var(--text-primary)] uppercase tracking-widest text-sm font-medium transition-colors">
             View All Collection &rarr;
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
@@ -71,9 +72,9 @@ export default function FeaturedProducts() {
         </div>
 
         <div className="mt-8 text-center md:hidden">
-          <a href="/products" className="text-[var(--text-primary)] uppercase tracking-widest text-sm font-bold border-b border-[var(--text-primary)] pb-1">
+          <Link href="/products" className="text-[var(--text-primary)] uppercase tracking-widest text-sm font-bold border-b border-[var(--text-primary)] pb-1">
             View All Collection
-          </a>
+          </Link>
         </div>
       </div>
     </section>
